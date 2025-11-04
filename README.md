@@ -1,6 +1,6 @@
 # Jehovah’s View of Time
 
-A simple iPhone-friendly web app that helps visualize human life from Jehovah’s perspective — where **1,000 years equal one day** (Psalm 90:4; 2 Peter 3:8).
+A simple iPhone-friendly web app that helps visualize human life span from Jehovah’s perspective — where **1,000 years equal one day** (Psalm 90:4; 2 Peter 3:8).
 
 ---
 
