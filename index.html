@@ -1,1 +1,100 @@
-<!DOCTYPE html><html><body><h1>Jehovah’s View of Time</h1></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Jehovah’s View of Time</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Jehovah’s View of Time">
+  <meta name="theme-color" content="#007bff">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <style>
+    html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+    body{background:linear-gradient(to bottom right,#eaf3ff,#f9fbff);display:flex;align-items:center;justify-content:center;padding:12px;min-height:100dvh;}
+    .card{width:100%;max-width:520px;background:#fff;border-radius:16px;padding:34px;box-shadow:0 6px 22px rgba(2,6,23,0.06);text-align:center;}
+    h2{margin:0 0 20px;color:#2c3e50;font-size:1.3rem;}
+    input,button{font-size:16px;padding:12px 14px;margin:6px;border-radius:10px;border:1px solid #d1d5db;box-sizing:border-box}
+    input{width:100%;max-width:320px;text-align:center;}
+    button{min-width:120px;background:#007bff;color:#fff;border:none;border-radius:999px;cursor:pointer;box-shadow:0 8px 20px rgba(0,123,255,0.12)}
+    button:active{transform:translateY(1px)}
+    #output-area{margin-top:18px}
+    #label{font-weight:700;color:#0f172a;margin-bottom:6px;display:block}
+    #result{font-size:1.25rem;font-weight:700;color:#0b1220;opacity:0;transform:translateY(6px);transition:opacity 300ms,transform 300ms}
+    #result.show{opacity:1;transform:translateY(0)}
+    .more-info{margin-top:14px;font-size:0.92rem}
+    .more-info a{color:#007bff;text-decoration:none}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(8,12,20,0.36);padding:18px}
+    .modal.show{display:flex}
+    .modal-content{background:#fff;max-width:520px;width:100%;padding:20px;border-radius:12px;text-align:left;box-shadow:0 8px 30px rgba(2,6,23,0.12);max-height:78dvh;overflow:auto}
+    .close{position:absolute;right:16px;top:12px;font-size:1.8rem;color:#666;border:none;background:transparent;cursor:pointer;padding:6px}
+    @media (prefers-color-scheme: dark){ body{background:linear-gradient(135deg,#101214,#171a1d);color:#e6eef9} .card{background:#151718} input{background:#1f2326;border:1px solid #2b2f33;color:#e6eef9} .modal-content{background:#151718;color:#e6eef9} .close:hover {background: rgba(255,255,255,0.04);} }
+    .desktop-message{background:#fff;color:#111;padding:30px;border-radius:8px;box-shadow:0 6px 18px rgba(2,6,23,0.06);font-size:1.02rem;max-width:720px;text-align:center}
+  </style>
+</head>
+<body>
+<script>
+  function isIPhone(){ return /iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
+  if(!isIPhone()){
+    document.write('<div class="desktop-message"><strong>For the best experience, open this app on your iPhone in Safari.</strong><br>This app is designed specifically for iPhone users.</div>');
+  } else {
+    document.write('\
+      <div class="card" id="app">\
+        <h2>How old are you in Jehovah\'s eyes?</h2>\
+        <input id="age" type="number" placeholder="Enter your age (years)" step="0.01" min="0" max="150">\
+        <div style="margin-top:8px">\
+          <button onclick="convert()">Calculate</button>\
+          <button id="reset-btn" style="display:none;background:#fff;color:#007bff;border:1px solid #d1d5db" onclick="resetForm()">Reset</button>\
+        </div>\
+        <div id="output-area">\
+          <span id="label"></span>\
+          <div id="result"></div>\
+        </div>\
+        <div class="more-info"><a href="#" onclick="openModal();return false;">More Information</a></div>\
+      </div>\
+      <div id="infoModal" class="modal" role="dialog" aria-modal="true">\
+        <div class="modal-content">\
+          <button class="close" aria-label="Close modal" onclick="closeModal()">&times;</button>\
+          <h3>Jehovah\'s View of Time</h3>\
+          <p>1,000 years equal one day in Jehovah\'s view of time. (Ps 90:4; 2 Pet 3:8)</p>\
+          <p>Therefore, in his view of time, <strong>41.656 years = 1 hour</strong>, and <strong>0.694 years = 1 minute</strong>.</p>\
+          <p><strong>Examples:</strong></p>\
+          <ul>\
+            <li>Jesus\' sacrificial death (33 CE) ≈ 47 hours in Jehovah\'s view.</li>\
+            <li>Adam\'s creation (4026 BCE) ≈ 6 days + 1 hour in Jehovah\'s view (as of 2025).</li>\
+          </ul>\
+        </div>\
+      </div>\
+    ');
+  }
+</script>
+
+<script>
+  function convert(){
+    const age = parseFloat(document.getElementById('age').value);
+    if(isNaN(age)){ alert('Please enter a valid number, and do not use a comma!'); return; }
+    const totalHours = age / 41.656;
+    const D = Math.floor(totalHours / 24);
+    const H = Math.floor(totalHours % 24);
+    const M = Math.floor((totalHours * 60) % 60);
+    const S = Math.round((totalHours * 3600) % 60);
+    let output='';
+    if(D>0) output = `${D} day${D!==1?'s':''} ${H} hour${H!==1?'s':''}`;
+    else if(H>0) output = `${H} hour${H!==1?'s':''} ${M} minute${M!==1?'s':''}`;
+    else output = `${M} minute${M!==1?'s':''} ${S} second${S!==1?'s':''}`;
+    document.getElementById('label').innerText = "Your age in Jehovah’s eyes:";
+    const r = document.getElementById('result');
+    r.classList.remove('show');
+    r.textContent = output;
+    setTimeout(()=>r.classList.add('show'),30);
+    document.getElementById('reset-btn').style.display = 'inline-block';
+  }
+  function resetForm(){ document.getElementById('age').value=''; document.getElementById('label').innerText=''; document.getElementById('result').innerText=''; document.getElementById('reset-btn').style.display='none'; }
+  function openModal(){ const m = document.getElementById('infoModal'); if(m) { m.classList.add('show'); const done = m.querySelector('.close'); if(done) done.focus(); } }
+  function closeModal(){ const m = document.getElementById('infoModal'); if(m){ m.classList.remove('show'); setTimeout(()=>{ if(!m.classList.contains('show')) m.style.display='none'; },260); } }
+  window.addEventListener('click', (e)=>{ const m = document.getElementById('infoModal'); if(m && m.classList.contains('show') && e.target === m) closeModal(); });
+  document.addEventListener('keypress', (e)=>{ if(e.key === 'Enter'){ const ageEl = document.getElementById('age'); if(ageEl && document.activeElement === ageEl) convert(); }});
+  if('serviceWorker' in navigator){ navigator.serviceWorker.register('./service-worker.js').catch(()=>{}); }
+</script>
+</body>
+</html>
