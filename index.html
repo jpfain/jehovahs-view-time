@@ -70,12 +70,27 @@
 </script>
 
 <script>
+  const ageInput = document.getElementById('age');
+
+  // 🔹 Auto-format numbers with commas (for better readability)
+  ageInput.addEventListener('input', () => {
+    let val = ageInput.value.replace(/,/g, '');
+    if (!isNaN(val) && val !== '') {
+      ageInput.value = Number(val).toLocaleString('en-US');
+    }
+  });
+
+  function parseAge() {
+    return parseFloat(ageInput.value.replace(/,/g, ''));
+  }
+
   function convert() {
-    const age = parseFloat(document.getElementById('age').value);
+    const age = parseAge();
     if (isNaN(age)) {
-      alert('Please enter a valid number (no commas).');
+      alert('Please enter a valid number (no letters).');
       return;
     }
+
     const totalHours = age / 41.656;
     const D = Math.floor(totalHours / 24);
     const H = Math.floor(totalHours % 24);
@@ -96,45 +111,45 @@
   }
 
   function resetForm() {
-    document.getElementById('age').value = '';
+    ageInput.value = '';
     document.getElementById('label').innerText = '';
     document.getElementById('result').innerText = '';
     document.getElementById('reset-btn').style.display = 'none';
   }
 
+  // 🔹 Improved modal handling
+  const modal = document.getElementById('infoModal');
+  const closeBtn = modal.querySelector('.close');
+
   function openModal() {
-    const m = document.getElementById('infoModal');
-    if (m) {
-      m.style.display = 'flex'; // ensure visible
-      requestAnimationFrame(() => m.classList.add('show'));
-      const closeButton = m.querySelector('.close');
-      if (closeButton) closeButton.focus();
-    }
+    modal.style.display = 'flex';
+    requestAnimationFrame(() => modal.classList.add('show'));
+    closeBtn.focus();
   }
 
   function closeModal() {
-    const m = document.getElementById('infoModal');
-    if (m) {
-      m.classList.remove('show');
-      setTimeout(() => (m.style.display = 'none'), 250);
-    }
+    modal.classList.remove('show');
+    setTimeout(() => (modal.style.display = 'none'), 250);
   }
 
+  // Close modal by background tap or ESC key
   window.addEventListener('click', (e) => {
-    const m = document.getElementById('infoModal');
-    if (m && m.classList.contains('show') && e.target === m) closeModal();
+    if (modal.classList.contains('show') && e.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
   });
 
+  // Allow Enter to trigger calculation
   document.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      const ageEl = document.getElementById('age');
-      if (ageEl && document.activeElement === ageEl) convert();
-    }
+    if (e.key === 'Enter' && document.activeElement === ageInput) convert();
   });
 
+  // Register service worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./service-worker.js').catch(() => {});
   }
 </script>
+
 </body>
 </html>
