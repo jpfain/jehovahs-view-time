@@ -12,7 +12,9 @@
   <style>
     html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
     body{background:linear-gradient(to bottom right,#eaf3ff,#f9fbff);display:flex;align-items:center;justify-content:center;padding:12px;min-height:100dvh;}
-    .card{width:100%;max-width:520px;background:#fff;border-radius:16px;padding:34px;box-shadow:0 6px 22px rgba(2,6,23,0.06);text-align:center;}
+    .card{width:100%;max-width:520px;background:#fff;border-radius:16px;padding:34px;box-shadow:0 6px 22px rgba(2,6,23,0.06);text-align:center;
+      opacity:0;transform:translateY(10px);animation:fadeInCard 0.6s ease-out forwards;}
+    @keyframes fadeInCard{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
     h2{margin:0 0 20px;color:#2c3e50;font-size:1.3rem;}
     input,button{font-size:16px;padding:12px 14px;margin:6px;border-radius:10px;border:1px solid #d1d5db;box-sizing:border-box}
     input{width:100%;max-width:320px;text-align:center;}
@@ -24,9 +26,9 @@
     #result.show{opacity:1;transform:translateY(0)}
     .more-info{margin-top:14px;font-size:0.92rem}
     .more-info a{color:#007bff;text-decoration:none}
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(8,12,20,0.36);padding:18px}
-    .modal.show{display:flex}
-    .modal-content{background:#fff;max-width:520px;width:100%;padding:20px;border-radius:12px;text-align:left;box-shadow:0 8px 30px rgba(2,6,23,0.12);max-height:78dvh;overflow:auto}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(8,12,20,0.36);padding:18px;transition:opacity 0.25s ease}
+    .modal.show{display:flex;opacity:1}
+    .modal-content{background:#fff;max-width:520px;width:100%;padding:20px;border-radius:12px;text-align:left;box-shadow:0 8px 30px rgba(2,6,23,0.12);max-height:78dvh;overflow:auto;position:relative;}
     .close{position:absolute;right:16px;top:12px;font-size:1.8rem;color:#666;border:none;background:transparent;cursor:pointer;padding:6px}
     @media (prefers-color-scheme: dark){ body{background:linear-gradient(135deg,#101214,#171a1d);color:#e6eef9} .card{background:#151718} input{background:#1f2326;border:1px solid #2b2f33;color:#e6eef9} .modal-content{background:#151718;color:#e6eef9} .close:hover {background: rgba(255,255,255,0.04);} }
     .desktop-message{background:#fff;color:#111;padding:30px;border-radius:8px;box-shadow:0 6px 18px rgba(2,6,23,0.06);font-size:1.02rem;max-width:720px;text-align:center}
@@ -41,7 +43,7 @@
     document.write('\
       <div class="card" id="app">\
         <h2>How old are you in Jehovah\'s eyes?</h2>\
-        <input id="age" type="number" placeholder="Enter your age (years)" step="0.01" min="0" max="150">\
+        <input id="age" type="text" inputmode="numeric" placeholder="Enter your age (years)" maxlength="6">\
         <div style="margin-top:8px">\
           <button onclick="convert()">Calculate</button>\
           <button id="reset-btn" style="display:none;background:#fff;color:#007bff;border:1px solid #d1d5db" onclick="resetForm()">Reset</button>\
@@ -72,16 +74,14 @@
 <script>
   const ageInput = document.getElementById('age');
 
-  // 🔹 Auto-format numbers with commas (for better readability)
   ageInput.addEventListener('input', () => {
-    let val = ageInput.value.replace(/,/g, '');
-    if (!isNaN(val) && val !== '') {
-      ageInput.value = Number(val).toLocaleString('en-US');
-    }
+    const digits = ageInput.value.replace(/\D/g, '');
+    ageInput.value = digits.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   });
 
   function parseAge() {
-    return parseFloat(ageInput.value.replace(/,/g, ''));
+    const digitsOnly = ageInput.value.replace(/,/g, '');
+    return parseFloat(digitsOnly);
   }
 
   function convert() {
@@ -117,7 +117,6 @@
     document.getElementById('reset-btn').style.display = 'none';
   }
 
-  // 🔹 Improved modal handling
   const modal = document.getElementById('infoModal');
   const closeBtn = modal.querySelector('.close');
 
@@ -132,7 +131,6 @@
     setTimeout(() => (modal.style.display = 'none'), 250);
   }
 
-  // Close modal by background tap or ESC key
   window.addEventListener('click', (e) => {
     if (modal.classList.contains('show') && e.target === modal) closeModal();
   });
@@ -140,16 +138,13 @@
     if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
   });
 
-  // Allow Enter to trigger calculation
   document.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && document.activeElement === ageInput) convert();
   });
 
-  // Register service worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./service-worker.js').catch(() => {});
   }
 </script>
-
 </body>
 </html>
