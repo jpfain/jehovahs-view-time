@@ -70,31 +70,71 @@
 </script>
 
 <script>
-  function convert(){
+  function convert() {
     const age = parseFloat(document.getElementById('age').value);
-    if(isNaN(age)){ alert('Please enter a valid number, and do not use a comma!'); return; }
+    if (isNaN(age)) {
+      alert('Please enter a valid number (no commas).');
+      return;
+    }
     const totalHours = age / 41.656;
     const D = Math.floor(totalHours / 24);
     const H = Math.floor(totalHours % 24);
     const M = Math.floor((totalHours * 60) % 60);
     const S = Math.round((totalHours * 3600) % 60);
-    let output='';
-    if(D>0) output = `${D} day${D!==1?'s':''} ${H} hour${H!==1?'s':''}`;
-    else if(H>0) output = `${H} hour${H!==1?'s':''} ${M} minute${M!==1?'s':''}`;
-    else output = `${M} minute${M!==1?'s':''} ${S} second${S!==1?'s':''}`;
+
+    let output = '';
+    if (D > 0) output = `${D} day${D !== 1 ? 's' : ''} ${H} hour${H !== 1 ? 's' : ''}`;
+    else if (H > 0) output = `${H} hour${H !== 1 ? 's' : ''} ${M} minute${M !== 1 ? 's' : ''}`;
+    else output = `${M} minute${M !== 1 ? 's' : ''} ${S} second${S !== 1 ? 's' : ''}`;
+
     document.getElementById('label').innerText = "Your age in Jehovah’s eyes:";
     const r = document.getElementById('result');
     r.classList.remove('show');
     r.textContent = output;
-    setTimeout(()=>r.classList.add('show'),30);
+    setTimeout(() => r.classList.add('show'), 30);
     document.getElementById('reset-btn').style.display = 'inline-block';
   }
-  function resetForm(){ document.getElementById('age').value=''; document.getElementById('label').innerText=''; document.getElementById('result').innerText=''; document.getElementById('reset-btn').style.display='none'; }
-  function openModal(){ const m = document.getElementById('infoModal'); if(m) { m.classList.add('show'); const done = m.querySelector('.close'); if(done) done.focus(); } }
-  function closeModal(){ const m = document.getElementById('infoModal'); if(m){ m.classList.remove('show'); setTimeout(()=>{ if(!m.classList.contains('show')) m.style.display='none'; },260); } }
-  window.addEventListener('click', (e)=>{ const m = document.getElementById('infoModal'); if(m && m.classList.contains('show') && e.target === m) closeModal(); });
-  document.addEventListener('keypress', (e)=>{ if(e.key === 'Enter'){ const ageEl = document.getElementById('age'); if(ageEl && document.activeElement === ageEl) convert(); }});
-  if('serviceWorker' in navigator){ navigator.serviceWorker.register('./service-worker.js').catch(()=>{}); }
+
+  function resetForm() {
+    document.getElementById('age').value = '';
+    document.getElementById('label').innerText = '';
+    document.getElementById('result').innerText = '';
+    document.getElementById('reset-btn').style.display = 'none';
+  }
+
+  function openModal() {
+    const m = document.getElementById('infoModal');
+    if (m) {
+      m.style.display = 'flex'; // ensure visible
+      requestAnimationFrame(() => m.classList.add('show'));
+      const closeButton = m.querySelector('.close');
+      if (closeButton) closeButton.focus();
+    }
+  }
+
+  function closeModal() {
+    const m = document.getElementById('infoModal');
+    if (m) {
+      m.classList.remove('show');
+      setTimeout(() => (m.style.display = 'none'), 250);
+    }
+  }
+
+  window.addEventListener('click', (e) => {
+    const m = document.getElementById('infoModal');
+    if (m && m.classList.contains('show') && e.target === m) closeModal();
+  });
+
+  document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const ageEl = document.getElementById('age');
+      if (ageEl && document.activeElement === ageEl) convert();
+    }
+  });
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+  }
 </script>
 </body>
 </html>
