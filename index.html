@@ -5,24 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-<!-- ⚡️ Font & connection optimization -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
-
-<!-- ⚡️ Preload next page -->
 <link rel="prefetch" href="main.html">
-
 <title>Jehovah’s View of Time</title>
-
 <style>
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -webkit-transform: translateZ(0);
   }
-
   body {
     margin: 0;
     height: 100vh;
@@ -36,10 +29,7 @@
     color: #2f2f2f;
     transition: opacity 1.5s ease-in-out;
   }
-
-  body.fade-out {
-    opacity: 0;
-  }
+  body.fade-out { opacity: 0; }
 
   h1 {
     font-size: 2em;
@@ -47,7 +37,6 @@
     opacity: 0;
     animation: fadeIn 3s ease forwards;
   }
-
   p {
     font-size: 0.9em;
     letter-spacing: 2px;
@@ -55,10 +44,7 @@
     opacity: 0;
     animation: fadeIn 3s ease 1s forwards;
   }
-
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
+  @keyframes fadeIn { to { opacity: 1; } }
 
   .hourglass {
     position: relative;
@@ -69,7 +55,6 @@
     box-shadow: inset 0 0 15px rgba(0,0,0,0.2), 0 0 10px rgba(255,255,255,0.5);
     overflow: hidden;
   }
-
   .hourglass::before {
     content: "";
     position: absolute;
@@ -88,7 +73,6 @@
     background: linear-gradient(to top, #e6c15a, #d6a83b);
     border-radius: 50%;
   }
-
   .sand-top {
     top: 0;
     height: 40%;
@@ -96,7 +80,6 @@
     border-bottom-right-radius: 50%;
     animation: sandTop 6s ease-in-out infinite;
   }
-
   .sand-bottom {
     bottom: 0;
     height: 20%;
@@ -104,7 +87,6 @@
     border-top-right-radius: 50%;
     animation: sandBottom 6s ease-in-out infinite;
   }
-
   .stream {
     position: absolute;
     left: 50%;
@@ -117,35 +99,27 @@
     border-radius: 2px;
     animation: streamFlow 6s ease-in-out infinite;
   }
-
   @keyframes sandTop {
     0% { height: 40%; }
     50% { height: 10%; }
     100% { height: 40%; }
   }
-
   @keyframes sandBottom {
     0% { height: 20%; }
     50% { height: 50%; }
     100% { height: 20%; }
   }
-
   @keyframes streamFlow {
-    0%, 100% { opacity: 0; height: 0; }
-    10%, 90% { opacity: 1; height: 30px; }
+    0%,100% { opacity: 0; height: 0; }
+    10%,90% { opacity: 1; height: 30px; }
   }
-
-  .hourglass-wrapper {
-    animation: flip 12s linear infinite;
-  }
-
+  .hourglass-wrapper { animation: flip 12s linear infinite; }
   @keyframes flip {
-    0%, 49% { transform: rotate(0deg); }
-    50%, 100% { transform: rotate(180deg); }
+    0%,49% { transform: rotate(0deg); }
+    50%,100% { transform: rotate(180deg); }
   }
 </style>
 </head>
-
 <body>
   <div class="hourglass-wrapper">
     <div class="hourglass">
@@ -154,17 +128,13 @@
       <div class="sand-bottom"></div>
     </div>
   </div>
-
   <h1>Jehovah’s View of Time</h1>
   <p>See Your Life Through His Eternal Measure</p>
 
   <script>
-    // Fade out before navigating
     setTimeout(() => {
       document.body.classList.add('fade-out');
-      setTimeout(() => {
-        window.location.href = "main.html";
-      }, 1500);
+      setTimeout(() => { window.location.href = "main.html"; }, 1500);
     }, 5000);
   </script>
 </body>
