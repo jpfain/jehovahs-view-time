@@ -152,7 +152,21 @@ window.addEventListener('load', () => {
     }, 1500);
   }, 3000);
 });
+  function formatWithCommas(el){
+  // Keep cursor position stable while typing
+  const start = el.selectionStart;
+  const end = el.selectionEnd;
 
+  // Remove existing commas, reformat, and preserve decimals
+  let value = el.value.replace(/,/g, '');
+  if(value === '' || isNaN(value)) return;
+  const parts = value.split('.');
+  parts[0] = parseInt(parts[0]).toLocaleString();
+  el.value = parts.join('.');
+
+  // Restore cursor position
+  el.setSelectionRange(start, end);
+}
 function convert(){
   const ageInput = document.getElementById('age');
   let ageStr = ageInput.value.replace(/,/g,'').trim();
