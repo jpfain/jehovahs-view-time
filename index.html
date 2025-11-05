@@ -8,17 +8,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
-<link rel="prefetch" href="main.html">
 <title>Jehovah’s View of Time</title>
 <style>
   /* Smooth fade-in for main app after splash screen */
-body {
-  opacity: 0;
-  animation: fadeInApp 1.5s ease forwards;
-}
-@keyframes fadeInApp {
-  to { opacity: 1; }
-}
+  body {
+    opacity: 0;
+    animation: fadeInApp 1.5s ease forwards;
+  }
+  @keyframes fadeInApp {
+    to { opacity: 1; }
+  }
+
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
@@ -140,16 +140,14 @@ body {
   <p>See Your Life Through His Eternal Measure</p>
 
   <script>
-  // Smooth fade transition to main Jehovah's View of Time app
-  setTimeout(() => {
-    document.body.classList.add('fade-out');
+    // Smooth fade transition to main Jehovah's View of Time app
     setTimeout(() => {
-      // Redirect to your app (index.html)
-      window.location.href = "index.html";
-    }, 1500);
-  }, 5000);
-</script>
-body { opacity: 0; animation: fadeInApp 1.5s ease forwards; }
-@keyframes fadeInApp { to { opacity: 1; } }
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        // Redirect to your app (index.html)
+        window.location.href = "index.html";
+      }, 1500);
+    }, 5000);
+  </script>
 </body>
 </html>
