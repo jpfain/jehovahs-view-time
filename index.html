@@ -12,7 +12,6 @@
 <style>
 html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
 body{background:linear-gradient(to bottom right,#eaf3ff,#f9fbff);display:flex;align-items:center;justify-content:center;padding:12px;min-height:100dvh;transition:opacity 1s ease-in-out;}
-
 /* SPLASH SCREEN */
 #splash {
   position: fixed;
@@ -55,7 +54,6 @@ body{background:linear-gradient(to bottom right,#eaf3ff,#f9fbff);display:flex;al
   animation: fadeIn 2s ease forwards;
 }
 @keyframes fadeIn { to { opacity: 1; } }
-
 /* APP CARD */
 .card{width:100%;max-width:520px;background:#fff;border-radius:16px;padding:34px;box-shadow:0 6px 22px rgba(2,6,23,0.06);text-align:center;opacity:0;transition:opacity 1.2s ease;}
 .card.show{opacity:1;}
@@ -70,7 +68,6 @@ button:active{transform:translateY(1px)}
 #result.show{opacity:1;transform:translateY(0)}
 .more-info{margin-top:14px;font-size:0.92rem}
 .more-info a{color:#007bff;text-decoration:none}
-
 /* WATERMARK */
 .footer-watermark {
   position: fixed;
@@ -85,13 +82,11 @@ button:active{transform:translateY(1px)}
   transition: opacity 1.5s ease;
 }
 .footer-watermark.show { opacity: 1; }
-
 /* MODAL */
 .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(8,12,20,0.36);padding:18px}
 .modal.show{display:flex}
 .modal-content{background:#fff;max-width:520px;width:100%;padding:20px;border-radius:12px;text-align:left;box-shadow:0 8px 30px rgba(2,6,23,0.12);max-height:78dvh;overflow:auto}
 .close{position:absolute;right:16px;top:12px;font-size:1.8rem;color:#666;border:none;background:transparent;cursor:pointer;padding:6px}
-
 @media (prefers-color-scheme: dark){
   body{background:linear-gradient(135deg,#101214,#171a1d);color:#e6eef9}
   .card{background:#151718}
@@ -112,7 +107,8 @@ button:active{transform:translateY(1px)}
   <!-- Main App -->
   <div class="card" id="app">
     <h2>How old are you in Jehovah's eyes?</h2>
-    <input id="age" type="number" placeholder="Enter your age (years)" step="0.01" min="0" max="150">
+    <!-- max removed -->
+    <input id="age" type="number" placeholder="Enter your age (years)" step="0.01" min="0">
     <div style="margin-top:8px">
       <button onclick="convert()">Calculate</button>
       <button id="reset-btn" style="display:none;background:#fff;color:#007bff;border:1px solid #d1d5db" onclick="resetForm()">Reset</button>
@@ -144,12 +140,10 @@ button:active{transform:translateY(1px)}
 
 <script>
 window.addEventListener('load', () => {
-  // Splash screen now stays visible for 3 seconds before fading
   setTimeout(() => {
     const splash = document.getElementById('splash');
     const app = document.getElementById('app');
     const footer = document.getElementById('footer-watermark');
-
     splash.classList.add('fade-out');
     setTimeout(() => {
       splash.remove();
@@ -160,33 +154,20 @@ window.addEventListener('load', () => {
 });
 
 function convert(){
-  // Get input and strip commas for calculation
   const ageInput = document.getElementById('age');
   let ageStr = ageInput.value.replace(/,/g,'').trim();
   const age = parseFloat(ageStr);
-
-  if(isNaN(age) || age < 0){ 
-    alert('Please enter a valid number, and do not use a comma!'); 
-    return; 
-  }
-
-  // Automatically format with commas if >= 1000
-  if(age >= 1000) {
-    ageInput.value = age.toLocaleString();
-  }
-
-  // Conversion math (Jehovah's time)
+  if(isNaN(age) || age < 0){ alert('Please enter a valid number, and do not use a comma!'); return; }
+  if(age >= 1000) ageInput.value = age.toLocaleString();
   const totalHours = age / 41.656;
   const D = Math.floor(totalHours / 24);
   const H = Math.floor(totalHours % 24);
   const M = Math.floor((totalHours * 60) % 60);
   const S = Math.round((totalHours * 3600) % 60);
-
-  let output = '';
+  let output='';
   if(D>0) output = `${D} day${D!==1?'s':''} ${H} hour${H!==1?'s':''}`;
   else if(H>0) output = `${H} hour${H!==1?'s':''} ${M} minute${M!==1?'s':''}`;
   else output = `${M} minute${M!==1?'s':''} ${S} second${S!==1?'s':''}`;
-
   document.getElementById('label').innerText = "Your age in Jehovah’s eyes:";
   const r = document.getElementById('result');
   r.classList.remove('show');
@@ -194,32 +175,11 @@ function convert(){
   setTimeout(()=>r.classList.add('show'),30);
   document.getElementById('reset-btn').style.display = 'inline-block';
 }
-
-function resetForm(){
-  document.getElementById('age').value='';
-  document.getElementById('label').innerText='';
-  document.getElementById('result').innerText='';
-  document.getElementById('reset-btn').style.display='none';
-}
-
-function openModal(){
-  const m = document.getElementById('infoModal');
-  if(m){ m.classList.add('show'); const done = m.querySelector('.close'); if(done) done.focus(); }
-}
-function closeModal(){
-  const m = document.getElementById('infoModal');
-  if(m){ m.classList.remove('show'); }
-}
-window.addEventListener('click', (e)=>{
-  const m = document.getElementById('infoModal');
-  if(m && m.classList.contains('show') && e.target === m) closeModal();
-});
-document.addEventListener('keypress', (e)=>{
-  if(e.key === 'Enter'){
-    const ageEl = document.getElementById('age');
-    if(ageEl && document.activeElement === ageEl) convert();
-  }
-});
+function resetForm(){ document.getElementById('age').value=''; document.getElementById('label').innerText=''; document.getElementById('result').innerText=''; document.getElementById('reset-btn').style.display='none'; }
+function openModal(){ const m = document.getElementById('infoModal'); if(m){ m.classList.add('show'); const done = m.querySelector('.close'); if(done) done.focus(); } }
+function closeModal(){ const m = document.getElementById('infoModal'); if(m){ m.classList.remove('show'); } }
+window.addEventListener('click', (e)=>{ const m = document.getElementById('infoModal'); if(m && m.classList.contains('show') && e.target === m) closeModal(); });
+document.addEventListener('keypress', (e)=>{ if(e.key === 'Enter'){ const ageEl = document.getElementById('age'); if(ageEl && document.activeElement === ageEl) convert(); }});
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('./service-worker.js').catch(()=>{}); }
 </script>
 </body>
