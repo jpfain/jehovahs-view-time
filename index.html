@@ -140,14 +140,24 @@
   <p>See Your Life Through His Eternal Measure</p>
 
   <script>
-    // Smooth fade transition to main Jehovah's View of Time app
+  // Automatically fade out splash once page is ready
+  window.addEventListener('load', () => {
+    // Add fade-out as soon as the content has loaded
+    document.body.classList.add('fade-out');
     setTimeout(() => {
+      // Redirect to main app immediately after fade
+      window.location.href = "index.html";
+    }, 1500); // 1.5s fade duration
+  });
+
+  // Safety fallback: if load event delays too long (5s max)
+  setTimeout(() => {
+    if (!document.body.classList.contains('fade-out')) {
       document.body.classList.add('fade-out');
-      setTimeout(() => {
-        // Redirect to your app (index.html)
-        window.location.href = "index.html";
-      }, 1500);
-    }, 5000);
-  </script>
+      setTimeout(() => { window.location.href = "index.html"; }, 1500);
+    }
+  }, 5000);
+</script>
+
 </body>
 </html>
